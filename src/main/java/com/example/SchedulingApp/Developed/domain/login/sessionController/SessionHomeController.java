@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequiredArgsConstructor
 public class SessionHomeController {
 
-    private final MemberService memberService;
-
     @GetMapping("/session-home")
     public String home(
             HttpServletRequest request,

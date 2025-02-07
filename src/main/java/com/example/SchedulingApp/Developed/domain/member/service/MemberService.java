@@ -56,9 +56,9 @@ public class MemberService {
     }
 
     //로그인
-    public LoginResponseDto login(String userName, String password) {
+    public LoginResponseDto login(String email, String password) {
         // 입력받은 userName, password 와 일치하는 Database 조회
-        Member member = memberRepository.findMemberByNameOrElseThrow(userName);
+        Member member = memberRepository.findMemberByEmailOrElseThrow(email);
         if (!member.getPassword().equals(password)) {
             throw new ApplicationException(ErrorMessageCode.UNAUTHORIZED, "Password Doesn't Match");
         }

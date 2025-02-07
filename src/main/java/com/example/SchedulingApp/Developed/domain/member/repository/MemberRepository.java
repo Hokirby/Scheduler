@@ -16,11 +16,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                 .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist Id = " + id));
     }
 
-    Optional<Member> findMemberByName(String memberName);
+    Optional<Member> findMemberByEmail(String email);
 
-    default Member findMemberByNameOrElseThrow(String memberName) {
-        return findMemberByName(memberName)
-                .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist Member Name = " + memberName));
+    default Member findMemberByEmailOrElseThrow(String email) {
+        return findMemberByEmail(email)
+                .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist email = " + email));
     }
 
+    Optional<Member> findMemberByName(String name);
+
+    default Member findMemberByNameOrElseThrow(String name){
+        return findMemberByName(name)
+                .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist name = " + name));
+    }
 }

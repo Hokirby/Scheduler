@@ -28,11 +28,11 @@ public class SessionMemberController {
             @Valid @ModelAttribute LoginRequestDto dto,
             HttpServletRequest request
     ) {
-        LoginResponseDto responseDto = memberService.login(dto.getMemberName(), dto.getPassword());
+        LoginResponseDto responseDto = memberService.login(dto.getEmail(), dto.getPassword());
         Long memberId = responseDto.getId();
         // 실패시 예외처리
         if (memberId == null) {
-            throw new ApplicationException(ErrorMessageCode.BAD_REQUEST, "Check The Mandatory Entry(id)");
+            throw new ApplicationException(ErrorMessageCode.BAD_REQUEST, "Check The Mandatory Entry(email)");
         }
         // 로그인 성공시 로직
         // Session의 Default Value는 true이다.
