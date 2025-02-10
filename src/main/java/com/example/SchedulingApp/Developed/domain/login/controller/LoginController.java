@@ -9,20 +9,20 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class LoginContoller {
+public class LoginController {
 
     private final MemberService memberService;
 
     @PostMapping("/login")
     public String login(
-            @Valid @ModelAttribute LoginRequestDto request,
+            @Valid @RequestBody LoginRequestDto request,
             HttpServletResponse response // 쿠키값 세팅에 필요
     ) {
         // 로그인 유저 조회

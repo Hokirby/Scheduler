@@ -4,6 +4,7 @@ import com.example.SchedulingApp.Developed.domain.schedule.service.ScheduleServi
 import com.example.SchedulingApp.Developed.domain.schedule.dto.CreateScheduleRequestDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.UpdateScheduleRequestDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ScheduleController {
 
     //일정 등록
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> saveSchedule(@RequestBody CreateScheduleRequestDto requestDto) {
+    public ResponseEntity<ScheduleResponseDto> saveSchedule(@Valid @RequestBody CreateScheduleRequestDto requestDto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.saveSchedule(
                 requestDto.getTitle(),
                 requestDto.getContent(),
@@ -45,7 +46,7 @@ public class ScheduleController {
 
     //선택 일정 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @RequestParam String password, @RequestBody UpdateScheduleRequestDto requestDto) throws MissingRequestValueException {
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @RequestParam String password, @Valid @RequestBody UpdateScheduleRequestDto requestDto) throws MissingRequestValueException {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, password, requestDto.getTitle(), requestDto.getMemberName()), HttpStatus.OK);
     }
 

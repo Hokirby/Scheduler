@@ -15,7 +15,7 @@ import java.io.IOException;
 public class LoginFilter implements Filter {
 
     //인증 안하는 URL
-    private static final String[] WHITE_LIST = {"/", "/user/signup", "/login"};
+    private static final String[] WHITE_LIST = {"/", "/member/signup", "/login"};
 
     // 로그인 여부를 확인하는 URL 인지 체크
     private boolean isWhiteList(String requestURI) {
