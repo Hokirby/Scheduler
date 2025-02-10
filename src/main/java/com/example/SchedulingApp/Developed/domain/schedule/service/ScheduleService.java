@@ -1,5 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.schedule.service;
 
+import com.example.SchedulingApp.Developed.config.PasswordEncoder;
 import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
-    private final ApplicationControllerAdvice applicationControllerAdvice;
+    private final PasswordEncoder passwordEncoder;
 
     //회원 정보 저장
     public ScheduleResponseDto saveSchedule(String title, String content, String memberName) {
@@ -50,14 +51,15 @@ public class ScheduleService {
 
     //일정 id와 작성자 이름 , 비밀번호로 일정 수정
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, String title, String memberName, String password) throws MissingRequestValueException {
+    public ScheduleResponseDto updateSchedule(Long id, String title, String memberName, String rawPassword) throws MissingRequestValueException {
         //필수값 검증
         if (title == null || memberName == null) {
             throw new ApplicationException(ErrorMessageCode.BAD_REQUEST, "Check The Mandatory Entry(title, member name)");
         }
         //수정된 메모 조회
         Member foundMember = memberRepository.findMemberByNameOrElseThrow(memberName);
-        if (foundMember.getPassword().equals(password)){
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        if (foundMember.getPassword().equals(encodedPassword)){
             throw new ApplicationException(ErrorMessageCode.UNAUTHORIZED, "Password Doesn't Match");
         }
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
