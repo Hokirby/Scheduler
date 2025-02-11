@@ -1,16 +1,16 @@
 package com.example.SchedulingApp.Developed.domain.schedule.controller;
 
 import com.example.SchedulingApp.Developed.domain.schedule.dto.CreateScheduleRequestDto;
+import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.UpdateScheduleRequestDto;
 import com.example.SchedulingApp.Developed.domain.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +30,12 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
     }
 
-    //전체 일정 조회
+    //전체 일정 조회 + 페이지네이션(페이지 크기 10, 수정일 기준 내림차순)
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedule() {
-        List<ScheduleResponseDto> scheduleResponseDtoList = scheduleService.findAllSchedule();
-        return new ResponseEntity<>(scheduleResponseDtoList, HttpStatus.OK);
+    public ResponseEntity<Page<PageScheduleResponseDto>> findAllSchedule(@RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        Page<PageScheduleResponseDto> responseDtoPage = scheduleService.findAllSchedule(page, size);
+        return new ResponseEntity<>(responseDtoPage, HttpStatus.OK);
     }
 
     //선택 일정 조회

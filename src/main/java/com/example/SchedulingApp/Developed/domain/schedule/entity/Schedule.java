@@ -24,7 +24,7 @@ public class Schedule extends BaseEntity {
 
     @Column(columnDefinition = "longText")
     private String content;
-
+    
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")//외래 키

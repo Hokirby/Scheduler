@@ -22,7 +22,6 @@ public class CommentController {
 
     private final CommentService commentService;
     private final MemberService memberService;
-    private final ScheduleService scheduleService;
 
     //댓글 등록
     @PostMapping

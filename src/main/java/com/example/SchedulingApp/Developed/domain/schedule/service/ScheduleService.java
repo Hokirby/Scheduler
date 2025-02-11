@@ -1,18 +1,21 @@
 package com.example.SchedulingApp.Developed.domain.schedule.service;
 
 import com.example.SchedulingApp.Developed.config.PasswordEncoder;
-import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;
-import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
-import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
+import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;
+import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
+import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
+import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
 import com.example.SchedulingApp.Developed.exception.ApplicationException;
 import com.example.SchedulingApp.Developed.exception.ErrorMessageCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +38,10 @@ public class ScheduleService {
     }
 
     //회원 정보 모두 가져오기
-    public List<ScheduleResponseDto> findAllSchedule() {
-        return scheduleRepository.findAll().stream()
-                .map(ScheduleResponseDto::toDto)
-                .toList();
+    public Page<PageScheduleResponseDto> findAllSchedule(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<Schedule> schedulePage = scheduleRepository.findAllByOrderByModifiedAtDesc(pageable);
+        return schedulePage.map(PageScheduleResponseDto::toDto);
     }
 
     // 일정 id로 일정 조회
@@ -61,7 +64,7 @@ public class ScheduleService {
     //id로 일정 삭제
     public void deleteScheduleById(Long id, String title, String email, String rawPassword) {
         validateAndAuthenticate(title, email, rawPassword);
-        Schedule foundSchedule =scheduleRepository.findScheduleByIdOrElseThrow(id);
+        Schedule foundSchedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
         scheduleRepository.delete(foundSchedule);
     }
 
@@ -72,9 +75,10 @@ public class ScheduleService {
         }
         Member foundMember = memberRepository.findMemberByEmailOrElseThrow(email);
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        if (foundMember.getPassword().equals(encodedPassword)){
+        if (foundMember.getPassword().equals(encodedPassword)) {
             throw new ApplicationException(ErrorMessageCode.UNAUTHORIZED, "Password Doesn't Match");
         }
 
     }
+
 }
