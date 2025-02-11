@@ -6,13 +6,11 @@ import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRe
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
-import com.example.SchedulingApp.Developed.config.ApplicationControllerAdvice;
 import com.example.SchedulingApp.Developed.exception.ApplicationException;
 import com.example.SchedulingApp.Developed.exception.ErrorMessageCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MissingRequestValueException;
 
 import java.util.List;
 
@@ -51,26 +49,32 @@ public class ScheduleService {
 
     //일정 id와 작성자 이름 , 비밀번호로 일정 수정
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, String title, String memberName, String rawPassword) throws MissingRequestValueException {
-        //필수값 검증
-        if (title == null || memberName == null) {
-            throw new ApplicationException(ErrorMessageCode.BAD_REQUEST, "Check The Mandatory Entry(title, member name)");
-        }
-        //수정된 메모 조회
-        Member foundMember = memberRepository.findMemberByNameOrElseThrow(memberName);
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-        if (foundMember.getPassword().equals(encodedPassword)){
-            throw new ApplicationException(ErrorMessageCode.UNAUTHORIZED, "Password Doesn't Match");
-        }
+    public ScheduleResponseDto updateSchedule(Long id, String title, String email, String rawPassword) {
+        validateAndAuthenticate(title, email, rawPassword);
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
+        schedule.setTitle(title);
         scheduleRepository.save(schedule);
         return ScheduleResponseDto.toDto(schedule);
     }
 
 
     //id로 일정 삭제
-    public void deleteScheduleById(Long id) {
+    public void deleteScheduleById(Long id, String title, String email, String rawPassword) {
+        validateAndAuthenticate(title, email, rawPassword);
         Schedule foundSchedule =scheduleRepository.findScheduleByIdOrElseThrow(id);
         scheduleRepository.delete(foundSchedule);
+    }
+
+    //필수값 검증 및 인증
+    private void validateAndAuthenticate(String title, String email, String rawPassword) {
+        if (title == null || email == null) {
+            throw new ApplicationException(ErrorMessageCode.BAD_REQUEST, "Check The Mandatory Entry(title, email)");
+        }
+        Member foundMember = memberRepository.findMemberByEmailOrElseThrow(email);
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        if (foundMember.getPassword().equals(encodedPassword)){
+            throw new ApplicationException(ErrorMessageCode.UNAUTHORIZED, "Password Doesn't Match");
+        }
+
     }
 }
