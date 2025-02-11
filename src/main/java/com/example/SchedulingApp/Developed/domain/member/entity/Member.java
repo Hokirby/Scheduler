@@ -1,6 +1,7 @@
 package com.example.SchedulingApp.Developed.domain.member.entity;
 
 import com.example.SchedulingApp.Developed.config.BaseEntity;
+import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public Member() {
     }

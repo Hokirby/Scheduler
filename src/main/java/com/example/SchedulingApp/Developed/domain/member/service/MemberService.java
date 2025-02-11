@@ -73,4 +73,10 @@ public class MemberService {
         return new LoginResponseDto(index);
     }
 
+    //email 로 멤버 조회
+    public MemberResponseDto findByEmail(String email) {
+        Member foundMember = memberRepository.findMemberByEmailOrElseThrow(email);
+        return new MemberResponseDto(foundMember.getId(), foundMember.getName());
+    }
+
 }
