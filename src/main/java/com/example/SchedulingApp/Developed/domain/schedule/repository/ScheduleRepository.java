@@ -6,6 +6,7 @@ import com.example.SchedulingApp.Developed.exception.ErrorMessageCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -15,5 +16,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
         return findScheduleById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist Id =" + id));
     }
+    @Query("SELECT s FROM Schedule s JOIN s.comments c ORDER BY s.modifiedAt desc")
     Page<Schedule> findAllByOrderByModifiedAtDesc(Pageable pageable);
 }

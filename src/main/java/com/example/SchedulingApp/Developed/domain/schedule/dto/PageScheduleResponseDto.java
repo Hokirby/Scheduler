@@ -14,6 +14,6 @@ public class PageScheduleResponseDto {
 
     //entity 를 Dto 로 변환
     public static PageScheduleResponseDto toDto(Schedule schedule) {
-        return new PageScheduleResponseDto(schedule.getTitle(), schedule.getContent(), schedule.getCommentCount(), schedule.getMember().getName());
+        return new PageScheduleResponseDto(schedule.getTitle(), schedule.getContent(), schedule.getComments().size(), schedule.getMember().getName());
     }
 }
