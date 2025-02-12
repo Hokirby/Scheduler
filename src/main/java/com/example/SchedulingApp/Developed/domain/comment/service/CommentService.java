@@ -43,6 +43,7 @@ public class CommentService {
     }
 
     //댓글 수정
+    @Transactional
     public CommentResponseDto updateComment(Long id, String comment, String email, String rawPassword) {
         validateAndAuthenticate(comment, email, rawPassword);
         Comment foundComment = commentRepository.findCommentByIdOrElseThrow(id);

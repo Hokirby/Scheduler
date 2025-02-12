@@ -22,6 +22,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     //암호화된 비밀번호로 회원 정보 저장
+    @Transactional
     public SignUpResponseDto signUp(String memberName, String rawPassword, String email) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         Member member = new Member(memberName, encodedPassword, email);

@@ -30,6 +30,7 @@ public class ScheduleService {
     private final CommentRepository commentRepository;
 
     //회원 정보 저장
+    @Transactional
     public ScheduleResponseDto saveSchedule(String title, String content, String memberName) {
         //작성자 이름으로 작성자 찾기
         Member foundMember = memberRepository.findMemberByNameOrElseThrow(memberName);

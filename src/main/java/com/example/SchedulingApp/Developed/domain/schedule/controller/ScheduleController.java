@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ScheduleController {
     private final ScheduleRepository scheduleRepository;
 
     //일정 등록
+    @Transactional
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> saveSchedule(@Valid @RequestBody CreateScheduleRequestDto requestDto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.saveSchedule(
