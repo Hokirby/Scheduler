@@ -43,13 +43,14 @@ public class ScheduleService {
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContent());
     }
 
+    //전테 일정 조회
     public List<ScheduleResponseDto> findAll() {
         return scheduleRepository.findAll().stream().map(ScheduleResponseDto::toDto).toList();
     }
 
     //일정 id 에 따라 댓글 모두 가져오기
-    public Page<Comment> getComments(Long scheduleId, Pageable pageable) {
-        return commentRepository.findAllByScheduleIdOrElseThrow(scheduleId, pageable);
+    public Page<PageScheduleResponseDto> getComments(Long scheduleId, Pageable pageable) {
+        return scheduleRepository.findAllByOrderByScheduleIdModifiedAtDesc(scheduleId, pageable);
     }
 
     // 일정 id로 일정 조회

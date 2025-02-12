@@ -1,5 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.schedule.repository;
 
+import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
 import com.example.SchedulingApp.Developed.exception.ApplicationException;
 import com.example.SchedulingApp.Developed.exception.ErrorMessageCode;
@@ -16,6 +17,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
         return findScheduleById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist Id =" + id));
     }
-    @Query("SELECT s FROM Schedule s JOIN s.comments c ORDER BY s.modifiedAt desc")
-    Page<Schedule> findAllByOrderByModifiedAtDesc(Pageable pageable);
+    @Query("SELECT new com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto(s.title, s.content, s.commentCount, m.name, s.createdAt, s.modifiedAt)" +
+            "FROM Schedule s JOIN Member m ON s.member.id = m.id " +
+            "WHERE s.id = :scheduleId " +
+            "ORDER BY s.modifiedAt DESC")
+    Page<PageScheduleResponseDto> findAllByOrderByScheduleIdModifiedAtDesc(Long scheduleId, Pageable pageable);
 }

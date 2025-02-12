@@ -1,11 +1,9 @@
 package com.example.SchedulingApp.Developed.domain.schedule.controller;
 
-import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.CreateScheduleRequestDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.UpdateScheduleRequestDto;
-import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
 import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
@@ -27,7 +25,6 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    private final ScheduleRepository scheduleRepository;
 
     //일정 등록
     @Transactional
@@ -43,7 +40,7 @@ public class ScheduleController {
 
     //전체 일정 조회
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedule(){
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedule() {
         List<ScheduleResponseDto> schedules = scheduleService.findAll();
         return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
@@ -56,14 +53,12 @@ public class ScheduleController {
 
     //선택 댓글 조회 + 페이징 기능(페이지 크기 10, 수정일 기준 내림차순)
     @GetMapping("/{id}/comment")
-    public ResponseEntity<PageScheduleResponseDto> getComments(@PathVariable Long id,
+    public ResponseEntity<Page<PageScheduleResponseDto>> getComments(@PathVariable Long id,
                                                                      @RequestParam(defaultValue = "0") int page,
                                                                      @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
-        Page<Comment> commentPage = scheduleService.getComments(id, pageable);
-        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
-        PageScheduleResponseDto pageScheduleResponseDto = new PageScheduleResponseDto(schedule.getTitle(), schedule.getContent(), schedule.getCommentCount(), schedule.getMember().getName(), commentPage);
-        return new ResponseEntity<>(pageScheduleResponseDto, HttpStatus.OK);
+        Page<PageScheduleResponseDto> commentPage = scheduleService.getComments(id, pageable);
+        return new ResponseEntity<>(commentPage, HttpStatus.OK);
     }
 
     //선택 일정 수정
