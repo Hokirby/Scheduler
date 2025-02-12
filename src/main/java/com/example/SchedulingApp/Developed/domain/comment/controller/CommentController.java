@@ -25,12 +25,9 @@ public class CommentController {
 
     //댓글 등록
     @PostMapping
-    public ResponseEntity<CommentResponseDto> saveComment(@Valid @RequestBody CommentRequestDto requestDto) {
-        MemberResponseDto responseDto = memberService.findByEmail(requestDto.getEmail());
-        CommentResponseDto commentResponseDto = new CommentResponseDto(
-                requestDto.getComment(),
-                responseDto.getId()
-        );
+    public ResponseEntity<CommentResponseDto> saveComment(@PathVariable Long scheduleId, @Valid @RequestBody CommentRequestDto requestDto) {
+        MemberResponseDto memberResponseDto = memberService.findByEmail(requestDto.getEmail());
+        CommentResponseDto commentResponseDto = commentService.createComment(requestDto.getComment(), scheduleId, memberResponseDto.getId());
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
@@ -54,8 +51,8 @@ public class CommentController {
 
     //댓글 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestBody UpdateCommentRequestDto requestDto) {
-        commentService.deleteComment(id, requestDto.getComment(), requestDto.getEmail(), requestDto.getPassword());
+    public ResponseEntity<Void> deleteComment(@PathVariable Long scheduleId, @PathVariable Long id, @RequestBody UpdateCommentRequestDto requestDto) {
+        commentService.deleteComment(scheduleId, id, requestDto.getComment(), requestDto.getEmail(), requestDto.getPassword());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

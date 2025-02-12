@@ -30,6 +30,9 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "member_id")//외래 키
     private Member member;
 
+    @Setter
+    private int commentCount = 0;
+
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 

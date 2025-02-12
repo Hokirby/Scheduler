@@ -1,16 +1,24 @@
 package com.example.SchedulingApp.Developed.domain.schedule.controller;
 
+import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.CreateScheduleRequestDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.UpdateScheduleRequestDto;
+import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
+import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final ScheduleRepository scheduleRepository;
 
     //일정 등록
     @PostMapping
@@ -30,18 +39,29 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
     }
 
-    //전체 일정 조회 + 페이지네이션(페이지 크기 10, 수정일 기준 내림차순)
+    //전체 일정 조회
     @GetMapping
-    public ResponseEntity<Page<PageScheduleResponseDto>> findAllSchedule(@RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "10") int size) {
-        Page<PageScheduleResponseDto> responseDtoPage = scheduleService.findAllSchedule(page, size);
-        return new ResponseEntity<>(responseDtoPage, HttpStatus.OK);
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedule(){
+        List<ScheduleResponseDto> schedules = scheduleService.findAll();
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
     //선택 일정 조회
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
+    }
+
+    //선택 댓글 조회 + 페이징 기능(페이지 크기 10, 수정일 기준 내림차순)
+    @GetMapping("/{id}/comment")
+    public ResponseEntity<PageScheduleResponseDto> getComments(@PathVariable Long id,
+                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<Comment> commentPage = scheduleService.getComments(id, pageable);
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
+        PageScheduleResponseDto pageScheduleResponseDto = new PageScheduleResponseDto(schedule.getTitle(), schedule.getContent(), schedule.getCommentCount(), schedule.getMember().getName(), commentPage);
+        return new ResponseEntity<>(pageScheduleResponseDto, HttpStatus.OK);
     }
 
     //선택 일정 수정

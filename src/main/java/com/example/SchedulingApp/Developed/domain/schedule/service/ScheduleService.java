@@ -1,6 +1,8 @@
 package com.example.SchedulingApp.Developed.domain.schedule.service;
 
 import com.example.SchedulingApp.Developed.config.PasswordEncoder;
+import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
+import com.example.SchedulingApp.Developed.domain.comment.repository.CommentRepository;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
 import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
@@ -17,12 +19,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommentRepository commentRepository;
 
     //회원 정보 저장
     public ScheduleResponseDto saveSchedule(String title, String content, String memberName) {
@@ -37,11 +42,13 @@ public class ScheduleService {
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContent());
     }
 
-    //회원 정보 모두 가져오기
-    public Page<PageScheduleResponseDto> findAllSchedule(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
-        Page<Schedule> schedulePage = scheduleRepository.findAllByOrderByModifiedAtDesc(pageable);
-        return schedulePage.map(PageScheduleResponseDto::toDto);
+    public List<ScheduleResponseDto> findAll() {
+        return scheduleRepository.findAll().stream().map(ScheduleResponseDto::toDto).toList();
+    }
+
+    //일정 id 에 따라 댓글 모두 가져오기
+    public Page<Comment> getComments(Long scheduleId, Pageable pageable) {
+        return commentRepository.findAllByScheduleIdOrElseThrow(scheduleId, pageable);
     }
 
     // 일정 id로 일정 조회

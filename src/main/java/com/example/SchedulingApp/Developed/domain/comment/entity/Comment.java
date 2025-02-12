@@ -6,6 +6,7 @@ import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +36,11 @@ public class Comment extends BaseEntity {
     public Comment(Long id, String comment) {
         this.id = id;
         this.comment = comment;
+    }
+
+    public Comment(String comment, Member member, Schedule schedule) {
+        this.comment = comment;
+        this.member = member;
+        this.schedule = schedule;
     }
 }
