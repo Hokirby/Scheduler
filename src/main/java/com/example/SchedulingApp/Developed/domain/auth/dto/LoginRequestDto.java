@@ -1,4 +1,4 @@
-package com.example.SchedulingApp.Developed.domain.login.dto;
+package com.example.SchedulingApp.Developed.domain.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

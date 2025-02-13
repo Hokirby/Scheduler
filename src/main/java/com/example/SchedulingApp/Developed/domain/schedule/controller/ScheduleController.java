@@ -4,8 +4,8 @@ import com.example.SchedulingApp.Developed.domain.schedule.dto.CreateScheduleReq
 import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.ScheduleResponseDto;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.UpdateScheduleRequestDto;
-import com.example.SchedulingApp.Developed.domain.schedule.repository.ScheduleRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +26,12 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     //일정 등록
-    @Transactional
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> saveSchedule(@Valid @RequestBody CreateScheduleRequestDto requestDto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.saveSchedule(
                 requestDto.getTitle(),
                 requestDto.getContent(),
-                requestDto.getMemberName()
+                requestDto.getMemberId()
         );
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
     }
@@ -63,14 +61,14 @@ public class ScheduleController {
 
     //선택 일정 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @Valid @RequestBody UpdateScheduleRequestDto requestDto) {
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto.getPassword(), requestDto.getTitle(), requestDto.getEmail()), HttpStatus.OK);
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, HttpServletRequest httpServletRequest, @Valid @RequestBody UpdateScheduleRequestDto requestDto) {
+        return new ResponseEntity<>(scheduleService.updateSchedule(httpServletRequest, id, requestDto.getPassword(), requestDto.getTitle(), requestDto.getEmail()), HttpStatus.OK);
     }
 
     //선택 일정 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @Valid @RequestBody UpdateScheduleRequestDto requestDto) {
-        scheduleService.deleteScheduleById(id, requestDto.getTitle(), requestDto.getEmail(), requestDto.getPassword());
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, HttpServletRequest httpServletRequest, @Valid @RequestBody UpdateScheduleRequestDto requestDto) {
+        scheduleService.deleteScheduleById(httpServletRequest, id, requestDto.getTitle(), requestDto.getEmail(), requestDto.getPassword());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-package com.example.SchedulingApp.Developed.domain.login.dto;
+package com.example.SchedulingApp.Developed.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

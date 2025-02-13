@@ -1,9 +1,12 @@
-package com.example.SchedulingApp.Developed.domain.login.sessionController;
+package com.example.SchedulingApp.Developed.domain.auth.controller;
 
 import com.example.SchedulingApp.Developed.config.Const;
-import com.example.SchedulingApp.Developed.domain.login.dto.LoginRequestDto;
-import com.example.SchedulingApp.Developed.domain.login.dto.LoginResponseDto;
+import com.example.SchedulingApp.Developed.domain.auth.dto.LoginRequestDto;
+import com.example.SchedulingApp.Developed.domain.auth.dto.LoginResponseDto;
+import com.example.SchedulingApp.Developed.domain.auth.service.AuthService;
 import com.example.SchedulingApp.Developed.domain.member.dto.MemberResponseDto;
+import com.example.SchedulingApp.Developed.domain.member.dto.SignUpResponseDto;
+import com.example.SchedulingApp.Developed.domain.member.dto.SignupRequestDto;
 import com.example.SchedulingApp.Developed.domain.member.service.MemberService;
 import com.example.SchedulingApp.Developed.exception.ApplicationException;
 import com.example.SchedulingApp.Developed.exception.ErrorMessageCode;
@@ -13,14 +16,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-public class SessionMemberController {
+public class AuthController {
 
+    private final AuthService authService;
     private final MemberService memberService;
 
     @PostMapping("/session-login")
@@ -28,7 +33,7 @@ public class SessionMemberController {
             @Valid @ModelAttribute LoginRequestDto dto,
             HttpServletRequest request
     ) {
-        LoginResponseDto responseDto = memberService.login(dto.getEmail(), dto.getPassword());
+        LoginResponseDto responseDto = authService.login(dto.getEmail(), dto.getPassword());
         Long memberId = responseDto.getId();
         // 실패시 예외처리
         if (memberId == null) {
@@ -40,7 +45,7 @@ public class SessionMemberController {
         // Session이 request에 없을 경우에 새로 Session을 생성한다.
         HttpSession session = request.getSession();
         // 회원 정보 조회
-        MemberResponseDto loginMember = memberService.findById(memberId);
+        MemberResponseDto loginMember = memberService.findById(request, memberId);
         // Session에 로그인 회원 정보를 저장한다.
         session.setAttribute(Const.LOGIN_MEMBER, loginMember);
         // 로그인 성공시 리다이렉트
@@ -56,5 +61,16 @@ public class SessionMemberController {
             session.invalidate(); // 해당 세션(데이터)을 삭제한다.
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //회원가입
+    @PostMapping("/signup")
+    public ResponseEntity<SignUpResponseDto> signUp(@Valid @RequestBody SignupRequestDto requestDto) {
+        SignUpResponseDto signUpResponseDto = authService.signUp(
+                requestDto.getMemberName(),
+                requestDto.getPassword(),
+                requestDto.getEmail()
+        );
+        return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
     }
 }

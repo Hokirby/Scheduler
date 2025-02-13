@@ -1,4 +1,4 @@
-package com.example.SchedulingApp.Developed.domain.login.sessionController;
+package com.example.SchedulingApp.Developed.domain.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +14,7 @@ public class SessionController {
     public String session(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "Found No Session";
         }
         // session 정보 조회
         log.info("session.getId()={}", session.getId());

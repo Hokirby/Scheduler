@@ -12,6 +12,6 @@ public class CreateScheduleRequestDto {
     @Size(max = 10, message = "Title Is Available Within 10 Characters")
     private final String title;
     private final String content;
-    @NotBlank(message = "Please Enter Your Name")
-    private final String memberName;
+    @NotBlank(message = "MemberId Is Mandatory Entry")
+    private final Long memberId;
 }
