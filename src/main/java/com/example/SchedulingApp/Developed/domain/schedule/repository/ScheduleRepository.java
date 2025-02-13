@@ -17,9 +17,11 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
         return findScheduleById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorMessageCode.NOT_FOUND, "Does Not Exist Id =" + id));
     }
-    @Query("SELECT new com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto(s.title, s.content, s.commentCount, m.name, s.createdAt, s.modifiedAt)" +
-            "FROM Schedule s JOIN Member m ON s.member.id = m.id " +
-            "WHERE s.id = :scheduleId " +
-            "ORDER BY s.modifiedAt DESC")
+    @Query("""
+            SELECT new com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto(s.title, s.content, s.commentCount, m.name, s.createdAt, s.modifiedAt)
+            FROM Schedule s JOIN Member m ON s.member.id = m.id
+            WHERE s.id = :scheduleId
+            ORDER BY s.modifiedAt DESC
+            """)
     Page<PageScheduleResponseDto> findAllByOrderByScheduleIdModifiedAtDesc(Long scheduleId, Pageable pageable);
 }
