@@ -28,11 +28,16 @@ public class AuthController {
     private final AuthService authService;
     private final MemberService memberService;
 
-    @PostMapping("/session-login")
+    @PostMapping("/login")
     public ResponseEntity<Void> login(
             @Valid @ModelAttribute LoginRequestDto dto,
             HttpServletRequest request
     ) {
+        //로그인이 이미 되어있는 경우 로그아웃
+        if (request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         LoginResponseDto responseDto = authService.login(dto.getEmail(), dto.getPassword());
         Long memberId = responseDto.getId();
         // 실패시 예외처리
@@ -52,7 +57,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/session-logout")
+    @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         // 로그인하지 않으면 HttpSession이 null로 반환된다.
         HttpSession session = request.getSession(false);
