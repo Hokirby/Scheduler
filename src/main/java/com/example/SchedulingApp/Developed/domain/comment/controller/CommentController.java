@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/{scheduleId}")
+@RequestMapping("/schedule/{scheduleId}/comments")
 @RestController
 public class CommentController {
 

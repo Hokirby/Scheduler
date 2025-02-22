@@ -1,5 +1,7 @@
-package com.example.SchedulingApp.Developed.config;
+package com.example.SchedulingApp.Developed.common.config;
 
+import com.example.SchedulingApp.Developed.common.fiter.LogFilter;
+import com.example.SchedulingApp.Developed.common.fiter.LoginFilter;
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

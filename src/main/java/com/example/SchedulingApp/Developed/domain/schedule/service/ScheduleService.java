@@ -1,7 +1,7 @@
 package com.example.SchedulingApp.Developed.domain.schedule.service;
 
-import com.example.SchedulingApp.Developed.config.PasswordEncoder;
-import com.example.SchedulingApp.Developed.config.SessionUtil;
+import com.example.SchedulingApp.Developed.common.config.PasswordEncoder;
+import com.example.SchedulingApp.Developed.common.config.SessionUtil;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
 import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;
 import com.example.SchedulingApp.Developed.domain.schedule.dto.PageScheduleResponseDto;
@@ -35,7 +35,7 @@ public class ScheduleService {
         //새로운 일정 객체 생성
         Schedule schedule = new Schedule(title, content);
         //일정에 작성자 정보 설정
-        schedule.setMember(foundMember);
+        schedule.setFoundMember(foundMember);
         //데이터베이스에 일정 저장
         scheduleRepository.save(schedule);
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContent());
@@ -65,7 +65,7 @@ public class ScheduleService {
     public ScheduleResponseDto updateSchedule(HttpServletRequest request, Long id, String title, String email, String rawPassword) {
         validateAndAuthenticate(request, title, email, rawPassword);
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
-        schedule.setTitle(title);
+        schedule.updateTitle(title);
         scheduleRepository.save(schedule);
         return ScheduleResponseDto.toDto(schedule);
     }

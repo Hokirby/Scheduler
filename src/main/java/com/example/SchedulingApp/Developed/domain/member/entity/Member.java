@@ -1,6 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.member.entity;
 
-import com.example.SchedulingApp.Developed.config.BaseEntity;
+import com.example.SchedulingApp.Developed.common.entity.BaseEntity;
 import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.example.SchedulingApp.Developed.config;
+package com.example.SchedulingApp.Developed.common.advice;
 
 import com.example.SchedulingApp.Developed.exception.ApplicationException;
 import com.example.SchedulingApp.Developed.exception.ErrorResultDto;

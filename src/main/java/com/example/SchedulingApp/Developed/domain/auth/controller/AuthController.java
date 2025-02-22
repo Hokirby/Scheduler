@@ -1,6 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.auth.controller;
 
-import com.example.SchedulingApp.Developed.config.Const;
+import com.example.SchedulingApp.Developed.common.consts.Const;
 import com.example.SchedulingApp.Developed.domain.auth.dto.LoginRequestDto;
 import com.example.SchedulingApp.Developed.domain.auth.dto.LoginResponseDto;
 import com.example.SchedulingApp.Developed.domain.auth.service.AuthService;

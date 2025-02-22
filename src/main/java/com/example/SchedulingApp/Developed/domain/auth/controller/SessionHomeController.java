@@ -1,6 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.auth.controller;
 
-import com.example.SchedulingApp.Developed.config.Const;
+import com.example.SchedulingApp.Developed.common.consts.Const;
 import com.example.SchedulingApp.Developed.domain.member.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

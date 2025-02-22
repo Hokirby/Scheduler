@@ -1,4 +1,4 @@
-package com.example.SchedulingApp.Developed.config;
+package com.example.SchedulingApp.Developed.common.fiter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

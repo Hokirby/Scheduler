@@ -1,6 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.auth.service;
 
-import com.example.SchedulingApp.Developed.config.PasswordEncoder;
+import com.example.SchedulingApp.Developed.common.config.PasswordEncoder;
 import com.example.SchedulingApp.Developed.domain.auth.dto.LoginResponseDto;
 import com.example.SchedulingApp.Developed.domain.member.dto.SignUpResponseDto;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;

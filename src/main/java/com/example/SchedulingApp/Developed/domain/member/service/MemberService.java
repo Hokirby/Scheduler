@@ -1,7 +1,7 @@
 package com.example.SchedulingApp.Developed.domain.member.service;
 
-import com.example.SchedulingApp.Developed.config.PasswordEncoder;
-import com.example.SchedulingApp.Developed.config.SessionUtil;
+import com.example.SchedulingApp.Developed.common.config.PasswordEncoder;
+import com.example.SchedulingApp.Developed.common.config.SessionUtil;
 import com.example.SchedulingApp.Developed.domain.member.dto.MemberResponseDto;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
 import com.example.SchedulingApp.Developed.domain.member.repository.MemberRepository;

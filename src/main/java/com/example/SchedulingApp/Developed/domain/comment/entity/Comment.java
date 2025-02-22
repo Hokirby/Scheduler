@@ -1,12 +1,10 @@
 package com.example.SchedulingApp.Developed.domain.comment.entity;
 
-import com.example.SchedulingApp.Developed.config.BaseEntity;
+import com.example.SchedulingApp.Developed.common.entity.BaseEntity;
 import com.example.SchedulingApp.Developed.domain.member.entity.Member;
 import com.example.SchedulingApp.Developed.domain.schedule.entity.Schedule;
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

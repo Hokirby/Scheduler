@@ -1,6 +1,6 @@
 package com.example.SchedulingApp.Developed.domain.comment.service;
 
-import com.example.SchedulingApp.Developed.config.PasswordEncoder;
+import com.example.SchedulingApp.Developed.common.config.PasswordEncoder;
 import com.example.SchedulingApp.Developed.domain.comment.dto.CommentResponseDto;
 import com.example.SchedulingApp.Developed.domain.comment.entity.Comment;
 import com.example.SchedulingApp.Developed.domain.comment.repository.CommentRepository;
@@ -32,7 +32,7 @@ public class CommentService {
         Member member = memberRepository.findMemberByIdOrElseThrow(memberId);
         Comment commentEntity = new Comment(comment, member, schedule);
         commentRepository.save(commentEntity);
-        schedule.setCommentCount(schedule.getCommentCount() + 1);
+        schedule.increaseCommentCount(schedule.getCommentCount());
         return new CommentResponseDto(commentEntity.getComment(), commentEntity.getMember().getId(), commentEntity.getSchedule().getId());
     }
 
@@ -58,7 +58,7 @@ public class CommentService {
         Comment foundComment = commentRepository.findCommentByIdOrElseThrow(id);
         commentRepository.delete(foundComment);
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(scheduleId);
-        schedule.setCommentCount(schedule.getCommentCount() - 1);
+        schedule.decreaseCommentCount(schedule.getCommentCount());
     }
 
     //필수값 인증 및 검증
